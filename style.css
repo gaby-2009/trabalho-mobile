@@ -1,39 +1,48 @@
 /* d. Definindo a largura e altura da tela (do corpo) */
 body {
-    height: 100vh; /* 100% da altura da viewport */
-    width: 100vw;  /* 100% da largura da viewport */
+    height: 100vh;
+    width: 100vw;
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center; /* Centraliza o container horizontalmente */
-    align-items: center;     /* Centraliza o container verticalmente */
-    background-color: #f0f0f0; /* Cor de fundo suave */
-    overflow: hidden; /* Garante que nada fora da tela seja visível */
-    font-family: Arial, sans-serif;
+    justify-content: center;
+    align-items: center;
+    background-color: #282c34; /* Fundo mais escuro */
+    overflow: hidden;
+    font-family: 'Comic Sans MS', cursive, sans-serif; /* Fonte mais divertida */
 }
 
 /* e. Determinando o espaço livre em torno do letreiro (o container) */
 .container {
-    width: 90%; /* Largura do espaço de deslizamento */
-    height: 100px;
-    border: 2px solid #333;
-    background-color: #fff;
-    /* Alinhamento dos itens internos (o letreiro) */
+    width: 90%;
+    height: 120px; /* Um pouco mais alto */
+    border: 4px solid #ff4500; /* Borda laranja vibrante */
+    background-color: #f7e73d; /* Fundo amarelo claro */
+    /* f. Alinhamento */
     display: flex; 
-    /* f. Alinhamento do texto em torno do letreiro (o texto em si será movido pelo JS) */
     align-items: center; 
-    position: relative; /* Necessário para posicionar o letreiro */
-    overflow: hidden; /* O letreiro estará fora e dentro deste espaço */
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.7); /* Sombra para destacar */
 }
 
 .letreiro {
-    /* c. O texto deve conter uma frase motivacional */
-    font-size: 2em;
-    font-weight: bold;
-    color: #007bff;
-    white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+    /* c. Frase Motivacional */
+    font-size: 2.5em; /* Maior */
+    font-weight: 900;
+    color: #ff1493; /* Cor inicial chamativa (rosa choque) */
+    white-space: nowrap;
     
-    /* Posição inicial para o deslizamento */
+    /* Posição inicial */
     position: absolute;
-    left: 0; /* b. Iniciando da esquerda para a direita */
+    left: 0;
+    
+    /* Cursor para indicar interatividade ao clicar/hover */
+    cursor: pointer; 
+    transition: transform 0.2s ease-out; /* Transição suave para o efeito hover */
+}
+
+/* Efeito Hover: Letreiro aumenta um pouco quando o mouse passa por cima */
+.letreiro:hover {
+    transform: scale(1.05); 
 }

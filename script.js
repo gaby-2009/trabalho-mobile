@@ -1,51 +1,99 @@
 // g. Controle a velocidade do letreiro (em pixels por frame de atualização)
-const VELOCIDADE_PX = 2; 
-const TEXTO_MOTIVACIONAL = "Acredite no seu potencial e a mudança acontecerá.";
+const VELOCIDADE_NORMAL = 1; 
+const VELOCIDADE_RAPIDA = 4; // Velocidade maior para o hover
+const CORES = ["#ff1493", "#32cd32", "#1e90ff", "#ffa500", "#9400d3"]; // Cores divertidas
 
-// Variáveis de controle
 let letreiro;
 let container;
-let posicaoX = 0; // Posição inicial
-let direcao = 1; // 1 para direita, -1 para esquerda (a. Deslizar e voltar)
+let posicaoX = 0; 
+let direcao = 1; 
+let animacaoFrameId; // ID da animação para poder cancelar (pausar)
+let estaPausado = false;
+let velocidadeAtual = VELOCIDADE_NORMAL;
 
 document.addEventListener('DOMContentLoaded', () => {
     letreiro = document.getElementById('letreiro');
     container = letreiro.parentElement;
     
-    // Adiciona o texto motivacional (redundante se estiver no HTML, mas útil para controle)
-    letreiro.textContent = TEXTO_MOTIVACIONAL;
+    // Adiciona interatividade de clique (Pausar/Continuar)
+    letreiro.addEventListener('click', togglePause);
+    
+    // Adiciona interatividade de hover (Acelerar/Desacelerar)
+    letreiro.addEventListener('mouseenter', () => velocidadeAtual = VELOCIDADE_RAPIDA);
+    letreiro.addEventListener('mouseleave', () => velocidadeAtual = VELOCIDADE_NORMAL);
 
-    // Inicia o loop de animação
-    requestAnimationFrame(animarLetreiro);
+    iniciarAnimacao();
 });
 
+function iniciarAnimacao() {
+    if (!estaPausado) {
+        animacaoFrameId = requestAnimationFrame(animarLetreiro);
+    }
+}
+
+function pararAnimacao() {
+    if (animacaoFrameId) {
+        cancelAnimationFrame(animacaoFrameId);
+        animacaoFrameId = null;
+    }
+}
+
+function togglePause() {
+    estaPausado = !estaPausado;
+    if (estaPausado) {
+        pararAnimacao();
+        // Feedback visual: Mudar cor e texto ao pausar
+        letreiro.style.color = "#ff0000"; // Vermelho ao pausar
+        letreiro.textContent = "[PAUSADO] Clique para Continuar!";
+        letreiro.style.transform = 'scale(1.1)'; // Destaca que está pausado
+    } else {
+        // Retorna ao estado normal e continua
+        letreiro.textContent = "Acredite no seu potencial e a mudança acontecerá.";
+        letreiro.style.transform = 'scale(1)';
+        iniciarAnimacao();
+    }
+}
+
+function mudarCorAleatoria() {
+    const corAtual = letreiro.style.color;
+    let novaCor;
+    do {
+        // Escolhe uma cor aleatória diferente da cor atual
+        const indiceAleatorio = Math.floor(Math.random() * CORES.length);
+        novaCor = CORES[indiceAleatorio];
+    } while (novaCor === corAtual);
+
+    letreiro.style.color = novaCor;
+}
+
 function animarLetreiro() {
-    // 1. Calcula as dimensões
     const larguraLetreiro = letreiro.offsetWidth;
     const larguraContainer = container.offsetWidth;
-    
-    // O ponto máximo que o letreiro pode ir antes de inverter é:
-    // Largura do Container - Largura do Letreiro.
     const limiteDireita = larguraContainer - larguraLetreiro;
+    
+    // 1. Atualiza a posição X usando a velocidade atual (normal ou rápida)
+    posicaoX += direcao * velocidadeAtual;
 
-    // 2. Atualiza a posição X
-    posicaoX += direcao * VELOCIDADE_PX;
-
-    // 3. Verifica e inverte a direção (Efeito Ping-Pong)
+    // 2. Verifica e inverte a direção (Efeito Ping-Pong)
+    let inverteu = false;
     if (posicaoX >= limiteDireita) {
-        // Chegou ao limite direito, inverte para a esquerda
         direcao = -1;
-        posicaoX = limiteDireita; // Ajuste para garantir que não ultrapasse
+        posicaoX = limiteDireita; 
+        inverteu = true;
     } else if (posicaoX <= 0) {
-        // Chegou ao limite esquerdo, inverte para a direita
         direcao = 1;
-        posicaoX = 0; // Ajuste para garantir que não ultrapasse
+        posicaoX = 0; 
+        inverteu = true;
     }
 
-    // 4. Aplica a nova posição ao elemento HTML
-    // Usamos 'transform: translateX()' para melhor performance
-    letreiro.style.transform = `translateX(${posicaoX}px)`;
+    // Ação Interativa: Mudar a cor ao inverter a direção
+    if (inverteu) {
+        mudarCorAleatoria();
+    }
 
-    // 5. Continua o loop no próximo frame
-    requestAnimationFrame(animarLetreiro);
+    // 3. Aplica a nova posição (melhor performance)
+    letreiro.style.transform = `translateX(${posicaoX}px) scale(${letreiro.style.transform.includes('scale') ? 1.05 : 1})`;
+
+    // 4. Continua o loop no próximo frame se não estiver pausado
+    animacaoFrameId = requestAnimationFrame(animarLetreiro);
 }
