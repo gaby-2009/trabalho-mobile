@@ -7,8 +7,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Fundo Branco/Claro (Removendo o fundo escuro) */
-    background-color: #ffffff; 
+    background-color: #ffffff; /* Fundo da tela (branco) */
     overflow: hidden;
     font-family: 'Comic Sans MS', cursive, sans-serif; 
 }
@@ -18,10 +17,11 @@ body {
     width: 90%;
     height: 120px;
     
-    /* Borda Suave/Invisível (Removendo a borda roxa/laranja vibrante) */
-    border: 1px solid #ccc; /* Borda cinza clara e fina */
+    /* Borda Roxa (Como solicitado) */
+    border: 4px solid #9400d3; /* Roxo Escuro Vibrante */
     
-    background-color: #f7e73d; /* Fundo amarelo claro (Mantido para destaque) */
+    /* Fundo Removido (Agora branco, acompanhando o body) */
+    background-color: #ffffff; 
     
     /* f. Alinhamento */
     display: flex; 
@@ -29,8 +29,8 @@ body {
     position: relative;
     overflow: hidden;
     
-    /* Sombra mais suave (Opcional, para manter algum destaque) */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    /* Sombra para destacar */
+    box-shadow: 0 0 10px rgba(148, 0, 211, 0.5); /* Sombra roxa para combinar */
 }
 
 .letreiro {
